@@ -5,10 +5,14 @@ function GridCanvas() {
   const [numberOfColumns, setNumberOfColumns] = useState(60);
   const [color, setColor] = useState("#e66465");
   const [mouseDown, setMouseDown] = useState(false);
-
+  const [visibleGrid, setVisibleGrid] = useState(true);
+  const [cellsSize, setCellsSize] = useState({
+    width: 24,
+    height: 24,
+  });
   const rows = [];
 
-  function handleChangeColor(event) {
+  function handelPaint(event) {
     if (mouseDown || event.type === "mousedown") {
       event.target.style.backgroundColor = color;
     }
@@ -22,16 +26,29 @@ function GridCanvas() {
     setMouseDown(false);
   }
 
+  function handleDragStart(e) {
+    e.preventDefault();
+    return false;
+  }
+
   for (let y = 0; y < numberOfRows; y++) {
     const cells = [];
     for (let x = 0; x < numberOfColumns; x++) {
       cells.push(
         <th
-          onMouseEnter={(e) => handleChangeColor(e)}
-          onMouseDown={(e) => handleChangeColor(e)}
+          onMouseEnter={(e) => handelPaint(e)}
+          onMouseDown={(e) => handelPaint(e)}
           onMouseUp={handleMouseUp}
-          className="w-8 h-8 border border-gray-500  bg-white transition-colors duration-100"
+          onDragStart={handleDragStart}
+          draggable="false"
+          className={`${
+            visibleGrid ? "border border-gray-200" : ""
+          } bg-white transition-colors duration-100`}
           key={`${x},${y}`}
+          style={{
+            width: `${cellsSize.width}px`,
+            height: `${cellsSize.height}px`,
+          }}
         ></th>
       );
     }
@@ -50,56 +67,182 @@ function GridCanvas() {
     setColor(value);
   }
 
+  function handleReload() {
+    location.reload();
+  }
+
+  function handleVisibleGrid() {
+    setVisibleGrid((prev) => !prev);
+  }
+
   return (
-    <main className="w-full flex-col gap-10 justify-center items-center p-10">
-      <div className="flex flex-row justify-start items-center gap-5 mb-10">
-        <label htmlFor="ROWS">Numero de filas:</label>
-        <input
-          id="ROWS"
-          type="text"
-          placeholder={numberOfRows}
-          className="border border-gray-600 rounded-md p-1 focus:border-gray-700 focus:border bg-white"
-          onChange={(e) => handleChangeRows(e.target.value)}
-        />
-        <label htmlFor="COLS">Numero de columnas:</label>
-        <input
-          id="COLS"
-          type="text"
-          placeholder={numberOfColumns}
-          className="border border-gray-600 rounded-md p-1 focus:border-gray-700 focus:border bg-white"
-          onChange={(e) => handleChangeColumns(e.target.value)}
-        />
-        <div className="inline-flex ">
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="lucide lucide-palette"
-          >
-            <circle cx="13.5" cy="6.5" r=".5" fill="currentColor" />
-            <circle cx="17.5" cy="10.5" r=".5" fill="currentColor" />
-            <circle cx="8.5" cy="7.5" r=".5" fill="currentColor" />
-            <circle cx="6.5" cy="12.5" r=".5" fill="currentColor" />
-            <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z" />
-          </svg>
+    <main className="w-full flex-col gap-10 justify-center items-center p-10 relative">
+      <div className="flex flex-col md:flex-row justify-center items-center gap-5 mb-10 border border-[#3d3d3d] p-5 text-white fixed top-0 left-0 bg-[#272727] w-full">
+        <div className="flex flex-col lg:flex-row justify-center items-center gap-2">
+          <label htmlFor="ROWS">Numero de filas:</label>
           <input
-            type="color"
-            id="head"
-            name="head"
-            value={color}
-            className="rounded-md"
-            onChange={(e) => handleColorChange(e.target.value)}
+            id="ROWS"
+            type="text"
+            placeholder={numberOfRows}
+            className="border border-[#3d3d3d] rounded-md p-1 bg-transparent w-[162px] lg:w-20"
+            onChange={(e) => handleChangeRows(e.target.value)}
           />
+          <div className="inline-flex justify-center items-center border border-[#3d3d3d] rounded-md p-1 bg-transparent h-[32px] gap-2">
+            <input
+              type="range"
+              name="rangeRows"
+              id="rangeRows"
+              min={0}
+              max={50}
+              onChange={(e) => handleChangeRows(e.target.value)}
+              className="h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer"
+              style={{accentColor: color}}
+            />
+            <div>
+              <p>{numberOfRows}</p>
+            </div>
+          </div>
+        </div>
+        <div className="flex flex-col lg:flex-row justify-center items-center gap-2">
+          <label htmlFor="COLS">Numero de columnas:</label>
+          <input
+            id="COLS"
+            type="text"
+            placeholder={numberOfColumns}
+            className="border border-[#3d3d3d] rounded-md p-1 bg-transparent w-[162px] lg:w-20"
+            onChange={(e) => handleChangeColumns(e.target.value)}
+          />
+          <div className="inline-flex justify-center items-center border border-[#3d3d3d] rounded-md p-1 bg-transparent h-[32px] gap-2">
+            <input
+              type="range"
+              name="rangeCols"
+              id="rangeCols"
+              min={0}
+              max={100}
+              onChange={(e) => handleChangeColumns(e.target.value)}
+              className="h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer"
+              style={{accentColor: color}}
+            />
+            <div>
+              <p>{numberOfColumns}</p>
+            </div>
+          </div>
+        </div>
+        <div className="flex flex-col md:flex-row justify-center items-center gap-2">
+          <div className="inline-flex justify-center items-center border border-[#3d3d3d] rounded-md  bg-transparent px-1 ">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#fff"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-paintbrush-vertical"
+            >
+              <path d="M10 2v2" />
+              <path d="M14 2v4" />
+              <path d="M17 2a1 1 0 0 1 1 1v9H6V3a1 1 0 0 1 1-1z" />
+              <path d="M6 12a1 1 0 0 0-1 1v1a2 2 0 0 0 2 2h2a1 1 0 0 1 1 1v2.9a2 2 0 1 0 4 0V17a1 1 0 0 1 1-1h2a2 2 0 0 0 2-2v-1a1 1 0 0 0-1-1" />
+            </svg>
+            <input
+              type="color"
+              id="head"
+              name="head"
+              value={color}
+              className=" w-10 h-[32px]"
+              onChange={(e) => handleColorChange(e.target.value)}
+            />
+          </div>
+          <div className="inline-flex justify-center items-center gap-2">
+            <div
+              className={`border border-[#3d3d3d] rounded-md  ${
+                color === "#fff" ? "bg-[#4d4d4d]" : "bg-transparent"
+              }  p-1 cursor-pointer`}
+              onClick={() => handleColorChange("#fff")}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-eraser"
+              >
+                <path d="m7 21-4.3-4.3c-1-1-1-2.5 0-3.4l9.6-9.6c1-1 2.5-1 3.4 0l5.6 5.6c1 1 1 2.5 0 3.4L13 21" />
+                <path d="M22 21H7" />
+                <path d="m5 11 9 9" />
+              </svg>
+            </div>
+            <div
+              className={`border border-[#3d3d3d] p-1 rounded-md cursor-pointer ${
+                !visibleGrid ? "bg-[#4d4d4d]" : "bg-transparent"
+              }`}
+              onClick={handleVisibleGrid}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-grid-3x3"
+              >
+                <rect width="18" height="18" x="3" y="3" rx="2" />
+                <path d="M3 9h18" />
+                <path d="M3 15h18" />
+                <path d="M9 3v18" />
+                <path d="M15 3v18" />
+              </svg>
+            </div>
+          </div>
+          <div className="border border-[#3d3d3d] rounded-md bg-transparent p-1 h-[32px]">
+            <div
+              className="inline-flex justify-center  items-center gap-2 cursor-pointer"
+              onClick={handleReload}
+            >
+              <p>Reiniciar</p>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-refresh-ccw"
+              >
+                <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+                <path d="M3 3v5h5" />
+                <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16" />
+                <path d="M16 16h5v5" />
+              </svg>
+            </div>
+          </div>
         </div>
       </div>
-      <table onMouseDown={handleMouseDown}>
-        <tbody>{rows}</tbody>
-      </table>
+      <div className="flex justify-center items-center mt-30">
+        <div className="border border-[#3d3d3d] rounded-lg  overflow-auto w-fit max-w-full ">
+          <table
+            className="border-collapse cursor-crosshair"
+            onMouseDown={handleMouseDown}
+          >
+            <tbody>{rows}</tbody>
+          </table>
+        </div>
+      </div>
     </main>
   );
 }
