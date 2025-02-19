@@ -185,7 +185,7 @@ function GridCanvas() {
                 className={`border border-[#3d3d3d] rounded-md h-[32px] w-[32px] flex items-center justify-center ${
                   eraserActive ? "bg-[#4d4d4d]" : "bg-transparent"
                 } cursor-pointer`}
-                onClick={() => handleColorChange("#fff")}
+                onClick={() => handleColorChange("#ffffff")}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
