@@ -1,4 +1,5 @@
 import {useState} from "react";
+import {motion} from "motion/react";
 
 function GridCanvas() {
   const [numberOfRows, setNumberOfRows] = useState(25);
@@ -75,14 +76,14 @@ function GridCanvas() {
     setVisibleGrid((prev) => !prev);
   }
 
-  function handleCellSizeChangeHeigth(event) {
+  function handleCellSizeChangeWidth(event) {
     setCellsSize((prev) => ({
       ...prev,
       width: Number(event.target.value),
     }));
   }
 
-  function handleCellSizeChangeWidth(event) {
+  function handleCellSizeChangeHeigth(event) {
     setCellsSize((prev) => ({
       ...prev,
       height: Number(event.target.value),
@@ -275,7 +276,12 @@ function GridCanvas() {
           </div>
         </div>
       </div>
-      <div className="flex justify-center items-center mt-100 md:mt-70 lg:mt-30">
+      <motion.div
+        initial={{opacity: 0, y: 20}}
+        animate={{opacity: 1, y: 0}}
+        transition={{duration: 0.5}}
+        className="flex justify-center items-center mt-100 md:mt-70 lg:mt-30"
+      >
         <div className="border border-[#3d3d3d] rounded-lg  overflow-auto w-fit max-w-full ">
           <table
             className="border-collapse cursor-crosshair"
@@ -284,7 +290,7 @@ function GridCanvas() {
             <tbody>{rows}</tbody>
           </table>
         </div>
-      </div>
+      </motion.div>
     </main>
   );
 }
