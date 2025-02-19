@@ -7,6 +7,7 @@ function GridCanvas() {
   const [color, setColor] = useState("#e66465");
   const [mouseDown, setMouseDown] = useState(false);
   const [visibleGrid, setVisibleGrid] = useState(true);
+  const [eraserActive, setEraserActive] = useState(false);
   const [cellsSize, setCellsSize] = useState({
     width: 24,
     height: 24,
@@ -65,6 +66,7 @@ function GridCanvas() {
   }
 
   function handleColorChange(value) {
+    setEraserActive((prev) => !prev);
     setColor(value);
   }
 
@@ -177,9 +179,11 @@ function GridCanvas() {
               />
             </div>
             <div className="inline-flex justify-center items-center gap-2 h-[32px]">
-              <div
+              <motion.div
+                whileHover={{scale: 1.2}}
+                whileTap={{scale: 0.8}}
                 className={`border border-[#3d3d3d] rounded-md h-[32px] w-[32px] flex items-center justify-center ${
-                  color === "#fff" ? "bg-[#4d4d4d]" : "bg-transparent"
+                  eraserActive ? "bg-[#4d4d4d]" : "bg-transparent"
                 } cursor-pointer`}
                 onClick={() => handleColorChange("#fff")}
               >
@@ -199,8 +203,10 @@ function GridCanvas() {
                   <path d="M22 21H7" />
                   <path d="m5 11 9 9" />
                 </svg>
-              </div>
-              <div
+              </motion.div>
+              <motion.div
+                whileHover={{scale: 1.2}}
+                whileTap={{scale: 0.8}}
                 className={`border border-[#3d3d3d] rounded-md h-[32px] w-[32px] flex items-center justify-center ${
                   !visibleGrid ? "bg-[#4d4d4d]" : "bg-transparent"
                 } cursor-pointer`}
@@ -224,8 +230,12 @@ function GridCanvas() {
                   <path d="M9 3v18" />
                   <path d="M15 3v18" />
                 </svg>
-              </div>
-              <div className="border border-[#3d3d3d] rounded-md bg-transparent h-[32px] px-2">
+              </motion.div>
+              <motion.div
+                whileHover={{scale: 1.2}}
+                whileTap={{scale: 0.8}}
+                className="border border-[#3d3d3d] rounded-md bg-transparent h-[32px] px-2"
+              >
                 <div
                   className="inline-flex justify-center items-center gap-2 cursor-pointer h-full"
                   onClick={handleReload}
@@ -248,7 +258,7 @@ function GridCanvas() {
                     <path d="M16 16h5v5" />
                   </svg>
                 </div>
-              </div>
+              </motion.div>
             </div>
           </div>
 
