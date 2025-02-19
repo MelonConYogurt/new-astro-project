@@ -75,6 +75,20 @@ function GridCanvas() {
     setVisibleGrid((prev) => !prev);
   }
 
+  function handleCellSizeChangeHeigth(event) {
+    setCellsSize((prev) => ({
+      ...prev,
+      width: Number(event.target.value),
+    }));
+  }
+
+  function handleCellSizeChangeWidth(event) {
+    setCellsSize((prev) => ({
+      ...prev,
+      height: Number(event.target.value),
+    }));
+  }
+
   return (
     <main className="w-full flex-col gap-10 justify-center items-center p-10 relative">
       <div className="flex flex-col md:flex-row justify-center items-center gap-5 mb-10 border border-[#3d3d3d] p-5 text-white fixed top-0 left-0 bg-[#272727] w-full">
@@ -93,7 +107,7 @@ function GridCanvas() {
               name="rangeRows"
               id="rangeRows"
               min={0}
-              max={50}
+              max={100}
               onChange={(e) => handleChangeRows(e.target.value)}
               className="h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer"
               style={{accentColor: color}}
@@ -118,7 +132,7 @@ function GridCanvas() {
               name="rangeCols"
               id="rangeCols"
               min={0}
-              max={100}
+              max={200}
               onChange={(e) => handleChangeColumns(e.target.value)}
               className="h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer"
               style={{accentColor: color}}
@@ -230,6 +244,30 @@ function GridCanvas() {
                 <path d="M16 16h5v5" />
               </svg>
             </div>
+          </div>
+        </div>
+        <div className="inline-flex justify-center items-center gap-5">
+          <div className="inline-flex justify-center items-center gap-2">
+            <label htmlFor="">Ancho celda:</label>
+            <input
+              onChange={(e) => handleCellSizeChangeWidth(e)}
+              placeholder={`${cellsSize.width} px`}
+              type="text"
+              name=""
+              id=""
+              className="border border-[#3d3d3d] rounded-md p-1 bg-transparent w-[162px] lg:w-20"
+            />
+          </div>
+          <div className="inline-flex justify-center items-center gap-2">
+            <label htmlFor="">alto celda:</label>
+            <input
+              onChange={(e) => handleCellSizeChangeHeigth(e)}
+              placeholder={`${cellsSize.height} px`}
+              type="text"
+              name=""
+              id=""
+              className="border border-[#3d3d3d] rounded-md p-1 bg-transparent w-[162px] lg:w-20"
+            />
           </div>
         </div>
       </div>
