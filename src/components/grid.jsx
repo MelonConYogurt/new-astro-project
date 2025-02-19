@@ -1,7 +1,7 @@
 import {useState} from "react";
 
 function GridCanvas() {
-  const [numberOfRows, setNumberOfRows] = useState(20);
+  const [numberOfRows, setNumberOfRows] = useState(25);
   const [numberOfColumns, setNumberOfColumns] = useState(60);
   const [color, setColor] = useState("#e66465");
   const [mouseDown, setMouseDown] = useState(false);
