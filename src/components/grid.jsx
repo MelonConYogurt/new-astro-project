@@ -275,7 +275,7 @@ function GridCanvas() {
           </div>
         </div>
       </div>
-      <div className="flex justify-center items-center mt-30">
+      <div className="flex justify-center items-center mt-100 md:mt-70 lg:mt-30">
         <div className="border border-[#3d3d3d] rounded-lg  overflow-auto w-fit max-w-full ">
           <table
             className="border-collapse cursor-crosshair"
